@@ -16,13 +16,14 @@ int precedance(string a);
 
 void inOrder(node *tree);
 void preOrder(node *node);
+string traversal(node *root);
 
 string removeSpaces(string str);
 vector<string> getOperands(string ip_string);
 vector<string> inToPost(vector<string> infix);
 vector<string> postfix(string in_string);
 
-node * operandNode(string str);
+node *operandNode(string str);
 node *constructTree(string eqn);
 
 node *copyNode(node *Node);
@@ -115,6 +116,45 @@ void preOrder(node *node)
     preOrder(node->right);
 }
 
+string traversal(node *root)
+{
+    if (root->data == "+" || root->data == "-" || root->data == "*" || root->data == "^")
+    {
+        return "[" + traversal(root->left) + " " + root->data + " " + traversal(root->right) + "]";
+    }
+    else
+    {
+        if (root->data == "cos")
+        {
+            return "cos(" + traversal(root->right) + ")";
+        }
+        else if (root->data == "sin")
+        {
+            return "sin(" + traversal(root->right) + ")";
+        }
+        else if (root->data == "tan")
+        {
+            return "tan(" + traversal(root->right) + ")";
+        }
+        else if (root->data == "log")
+        {
+            return "log(" + traversal(root->right) + ")";
+        }
+        else if (root->data == "cosec")
+        {
+            return "cosec(" + traversal(root->right) + ")";
+        }
+        else if (root->data == "sec")
+        {
+            return "sec(" + traversal(root->right) + ")";
+        }
+
+        else
+        {
+            return root->data;
+        }
+    }
+}
 /***********************************************************************************************/
 
 //removes all the whitespace characters(" ","\n","\t") from the string
@@ -136,20 +176,18 @@ vector<string> getOperands(string ip_string)
     stack<string> st;
     for (i = 0; i < ip_string.length(); i++)
     {
-        if(ip_string[i]=='[')
+        if (ip_string[i] == '[')
         {
             st.push("[");
             while (!st.empty())
             {
                 i++;
-                if(ip_string[i]=='[')
+                if (ip_string[i] == '[')
                     st.push("[");
-                if(ip_string[i]==']')
+                if (ip_string[i] == ']')
                     st.pop();
             }
             i++;
-
-            
         }
         if (ip_string[i] == ' ') //parsing the string whenever a space is encountered
         {
@@ -165,11 +203,10 @@ vector<string> getOperands(string ip_string)
         }
     }
     s1 = ip_string.substr(start, ip_string.length() - start);
-   // s1 = removeSpaces(s1);
+    // s1 = removeSpaces(s1);
     operands.push_back(s1);
     return operands;
 }
-
 
 //converts the given infix string into a postfix string
 vector<string> inToPost(vector<string> infix)
@@ -228,7 +265,6 @@ vector<string> inToPost(vector<string> infix)
     return post;
 }
 
-
 //driver code which takes input as a string and returns a vector of type string of postfix expression
 vector<string> postfix(string in_string)
 {
@@ -243,34 +279,32 @@ vector<string> postfix(string in_string)
 
 /***********************************************************************************************/
 
-node * operandNode(string str)
+node *operandNode(string str)
 {
-    string br1="[" , br2="]";
+    string br1 = "[", br2 = "]";
     node *new1;
     int occ1 = str.find(br1);
     int occ2;
-    if(occ1==string::npos)
+    if (occ1 == string::npos)
     {
         new1 = new node();
         new1->data = str;
-        new1->left=NULL;
-        new1->right=NULL;
+        new1->left = NULL;
+        new1->right = NULL;
     }
     else
     {
         new1 = new node();
-        string operator1 = str.substr(0,occ1);
+        string operator1 = str.substr(0, occ1);
         new1->data = operator1;
-        
+
         occ2 = str.rfind(br2);
         // cout<<__LINE__<<str<<endl;
         // cout<<__LINE__<<occ2<<endl;
-        string operand = str.substr(occ1+1,occ2-occ1-1);
+        string operand = str.substr(occ1 + 1, occ2 - occ1 - 1);
         // cout<<__LINE__<<operand<<endl;
         new1->right = constructTree(operand);
         new1->left = NULL;
-        
-
     }
     return new1;
 }
@@ -282,13 +316,13 @@ node *constructTree(string eqn)
     // for (int j = 0; j < post.size(); ++j)
     //     cout << post[j] << " ";
     // cout<<endl;
-    if(post[0]=="x")
+    if (post[0] == "x")
     {
-        node * new1;
+        node *new1;
         new1 = new node();
-        new1->data="x";
-        new1->left=NULL;
-        new1->right=NULL;
+        new1->data = "x";
+        new1->left = NULL;
+        new1->right = NULL;
         return new1;
     }
     stack<node *> stk;
@@ -350,7 +384,6 @@ node *constructTree(string eqn)
     return stk.top();
 }
 
-
 /***********************************************************************************************/
 
 /***********************************************************************************************/
@@ -369,7 +402,6 @@ node *copyNode(node *Node)
         return temp;
     }
 }
-
 
 //function defined for calculating the derivatives of functions which includes exponential function
 //case 1 : e ^ x
@@ -580,7 +612,6 @@ node *findDerivative(node *Node)
             newNodeL->data = "^";
             newNodeLL = new node();
             newNodeLL->data = "sec";
-            newNodeLL->right = new node();
             newNodeLL->right = copyNode(Node->right);
             newNodeLL->left = NULL;
 
@@ -591,6 +622,101 @@ node *findDerivative(node *Node)
             newNodeLR->data = "2";
             newNodeLR->left = NULL;
             newNodeLR->right = NULL;
+        }
+        else if (operand == "sec")
+        {
+            newNode = new node();
+            newNodeL = new node();
+            newNodeR = new node();
+            newNodeLL = new node();
+            newNodeLR = new node();
+
+            newNode->data = "*";
+            newNode->left = newNodeL;
+            newNode->right = findDerivative(Node->right);
+
+            newNodeL->data = "*";
+            newNodeL->left = newNodeLL;
+            newNodeL->right = newNodeLR;
+
+            newNodeLL->data = "sec";
+            newNodeLL->left = NULL;
+            newNodeLL->right = copyNode(Node->right);
+
+            newNodeLR->data = "tan";
+            newNodeLR->left = NULL;
+            newNodeLR->right = copyNode(Node->right);
+        }
+        else if (operand == "cosec")
+        {
+            newNode = new node();
+            newNodeL = new node();
+            newNodeR = new node();
+            newNodeLL = new node();
+            newNodeLR = new node();
+
+            newNode->data = "*";
+            newNode->left = newNodeL;
+            newNode->right = findDerivative(Node->right);
+
+            newNodeL->data = "*";
+            newNodeL->left = newNodeLL;
+            newNodeL->right = newNodeLR;
+
+            newNodeLR->data = "cot";
+            newNodeLR->left = NULL;
+            newNodeLR->right = copyNode(Node->right);
+
+            node *newNodeLLL, *newNodeLLR;
+            newNodeLLL = new node();
+            newNodeLLR = new node();
+
+            newNodeLL->data = "*";
+            newNodeLL->left = newNodeLLL;
+            newNodeLL->right = newNodeLLR;
+
+            newNodeLLL->data = "-1";
+            newNodeLLL->left = NULL;
+            newNodeLLL->right = NULL;
+
+            newNodeLLR->data = "cosec";
+            newNodeLLR->left = NULL;
+            newNodeLLR->right = copyNode(Node->right);
+        }
+        else if (operand == "cot")
+        {
+            newNode = new node();
+            newNodeL = new node();
+            newNodeR = new node();
+            newNodeLL = new node();
+            newNodeLR = new node();
+
+            newNode->data = "*";
+            newNode->left = newNodeL;
+            newNode->right = findDerivative(Node->right);
+
+            newNodeL->data = "*";
+            newNodeL->left = newNodeLL;
+            newNodeL->right = newNodeLR;
+
+            newNodeLL->data = "-1";
+            newNodeLL->left = NULL;
+            newNodeLL->right = NULL;
+
+            node *newNodeLRL, *newNodeLRR;
+            newNodeLRL = new node();
+            newNodeLRR = new node();
+            newNodeLR->data = "^";
+            newNodeLR->left = newNodeLRL;
+            newNodeLR->right = newNodeLRR;
+
+            newNodeLRL->data = "cosec";
+            newNodeLRL->left = NULL;
+            newNodeLRL->right = copyNode(Node->right);
+
+            newNodeLRR->data = "2";
+            newNodeLRR->left = NULL;
+            newNodeLRR->right = NULL;
         }
         else if (operand == "log")
         {
@@ -648,7 +774,18 @@ void getDerivative()
     node *deri = new node();
     deri = derivative(in_string);
     cout << "\nInorder traversal of the derivative : ";
-    inOrder(deri);
+    // inOrder(deri);
+    string derivative = traversal(deri);
+    cout << derivative; //substr(2,derivative.length()-4);
+
+    //cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]
+    //[[cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]]]
+    // [[[[[34 * sin(x)] ^ -1] * [[34 * [cos(x) * 1]] + [0 * sin(x)]]] + [[sec ^ 2] * [[cos(x) * 1] - 0]]] + 0]
+
+    // log[34 * sin[x]] + tan[sin[x] - 67] + 12
+    // sin[cos[2 * x] + 12] + 123 * x
+    // sin[x] + cos[x] + 123 * x
+    // sec[4 * x] + tan[log[x] + 12] + 12
 }
 
 /***********************************************************************************************/
