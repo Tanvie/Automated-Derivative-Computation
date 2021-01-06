@@ -148,7 +148,10 @@ string traversal(node *root)
         {
             return "sec(" + traversal(root->right) + ")";
         }
-
+        else if (root->data == "cot")
+        {
+            return "cot(" + traversal(root->right) + ")";
+        }
         else
         {
             return root->data;
