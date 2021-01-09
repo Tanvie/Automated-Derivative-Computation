@@ -276,7 +276,7 @@ vector<string> postfix(string in_string)
     vector<string> post;
     operands = getOperands(in_string);
     post = inToPost(operands);
-    return post; // post -> Vector containing the operators and operands in postfix order. 
+    return post; // post -> Vector containing the operators and operands in postfix order.
 }
 
 /***********************************************************************************************/
@@ -387,7 +387,7 @@ node *copyNode(node *Node)
         temp->data = Node->data;
         temp->left = copyNode(Node->left);
         temp->right = copyNode(Node->right);
-        return temp; // temp -> Root node of the copied tree. 
+        return temp; // temp -> Root node of the copied tree.
     }
 }
 
@@ -406,7 +406,7 @@ node *exponentDerivative(node *Node)
 
         newNode->data = "*";
         newNode->left = newNodeL;
-        newNode->right = findDerivative(Node->right);  // f'(x)
+        newNode->right = findDerivative(Node->right); // f'(x)
 
         newNodeL->data = "^"; //  (e ^ f(x))
 
@@ -427,13 +427,13 @@ node *exponentDerivative(node *Node)
 
         newNode->data = "*";
         newNode->left = newNodeL;
-        newNode->right = findDerivative(Node->right);  // f'(x)
+        newNode->right = findDerivative(Node->right); // f'(x)
 
         newNodeL->data = "*";
         newNodeL->left = newNodeLL;
         newNodeL->right = newNodeLR;
 
-        newNodeLL->data = "^";   //  (a ^ (f(x)))
+        newNodeLL->data = "^"; //  (a ^ (f(x)))
         newNodeLL->left = new node();
         newNodeLL->left->data = opr1;
         newNodeLL->left->left = NULL;
@@ -442,7 +442,7 @@ node *exponentDerivative(node *Node)
         newNodeLL->right = new node();
         newNodeLL->right = copyNode(Node->right);
 
-        newNodeLR->data = "log";  //  log(a)
+        newNodeLR->data = "log"; //  log(a)
         newNodeLR->left = NULL;
         newNodeLR->right = new node();
         newNodeLR->right->data = opr1;
@@ -461,7 +461,7 @@ node *exponentDerivative(node *Node)
 
         newNode->data = "*";
         newNode->left = newNodeL;
-        newNode->right = findDerivative(Node->left);  // f'(x)
+        newNode->right = findDerivative(Node->left); // f'(x)
 
         newNodeL->data = "*";
         newNodeL->left = newNodeLL;
@@ -471,7 +471,7 @@ node *exponentDerivative(node *Node)
         newNodeLL->left = NULL;
         newNodeLL->right = NULL;
 
-        newNodeLR->data = "^";  // (f(x) ^ (a-1))
+        newNodeLR->data = "^"; // (f(x) ^ (a-1))
         newNodeLR->left = copyNode(Node->left);
         newNodeLR->right = new node();
         num1 = stoi(Node->right->data);
@@ -479,30 +479,30 @@ node *exponentDerivative(node *Node)
         ss << num1;
         string str = ss.str();
 
-        newNodeLR->right->data = str;  // a 
+        newNodeLR->right->data = str; // a
         newNodeLR->right->left = NULL;
         newNodeLR->right->right = NULL;
     }
     return newNode;
 }
 
-//function which takes root of expression tree as input and recursively finds the derivative of given
-//expression tree
+// Function which takes root of expression tree and recursively finds the derivative of given
+// expression tree.
 node *findDerivative(node *Node)
 {
     node *newNode, *newNodeL, *newNodeR;
 
     if (isOperator(Node->data))
-    //the node is operator node and recursively find left and right child's derivative
     {
-        if (Node->data == "+" || Node->data == "-")
+        // The node is operator node and recursively find left and right child's derivative
+        if (Node->data == "+" || Node->data == "-") // f(x) + g(x) -> f'(x) + g'(x)
         {
             newNode = new node();
             newNode->data = Node->data;
             newNode->left = findDerivative(Node->left);
             newNode->right = findDerivative(Node->right);
         }
-        else if (Node->data == "*") //multiplication rule
+        else if (Node->data == "*") // f(x) * g(x) -> (f(x) * g'(x)) + (f'(x) * g(x))
         {
             newNode = new node();
             newNodeL = new node();
@@ -512,17 +512,17 @@ node *findDerivative(node *Node)
             newNode->left = newNodeL;
             newNode->right = newNodeR;
 
-            newNodeL->data = "*";
+            newNodeL->data = "*"; //  (f(x) * g'(x))
             newNodeL->left = copyNode(Node->left);
             newNodeL->right = findDerivative(Node->right);
 
-            newNodeR->data = "*";
+            newNodeR->data = "*"; //  (f'(x) * g(x))
             newNodeR->left = findDerivative(Node->left);
             newNodeR->right = copyNode(Node->right);
         }
 
-        //exponentDerivative function called for finding the derivative of functions which include
-        //all exponential functions
+        // ExponentDerivative function called for finding the derivative of functions which include
+        // all exponential functions.
         else if (Node->data == "^")
         {
             newNode = exponentDerivative(Node);
@@ -534,21 +534,21 @@ node *findDerivative(node *Node)
         operand = Node->data;
         node *newNodeL, *newNodeR;
         node *newNodeLL, *newNodeLR;
-        if (isNumber(operand)) // return 0 as derivative of constant
+        if (isNumber(operand)) // a -> 0
         {
             newNode = new node();
             newNode->data = "0";
             newNode->left = NULL;
             newNode->right = NULL;
         }
-        else if (operand == "x")
+        else if (operand == "x") // x -> 1
         {
             newNode = new node();
             newNode->data = "1";
             newNode->left = NULL;
             newNode->right = NULL;
         }
-        else if (operand == "sin")
+        else if (operand == "sin") // sin(f(x)) -> cos(f(x)) * f'(x)
         {
             newNode = new node();
             newNodeL = new node();
@@ -556,13 +556,13 @@ node *findDerivative(node *Node)
 
             newNode->data = "*";
             newNode->left = newNodeL;
-            newNode->right = findDerivative(Node->right);
+            newNode->right = findDerivative(Node->right); //  f'(x)
 
-            newNodeL->data = "cos";
+            newNodeL->data = "cos"; // cos(f(x))
             newNodeL->left = NULL;
             newNodeL->right = copyNode(Node->right);
         }
-        else if (operand == "cos")
+        else if (operand == "cos") // cos(f(x)) -> -1 * sin(f(x)) * f'(x)
         {
             newNode = new node();
             newNodeL = new node();
@@ -570,11 +570,11 @@ node *findDerivative(node *Node)
 
             newNode->data = "*";
             newNode->left = newNodeL;
-            newNode->right = findDerivative(Node->right);
+            newNode->right = findDerivative(Node->right); // f'(x)
 
             newNodeL->data = "*";
 
-            newNodeLL = new node();
+            newNodeLL = new node(); // -1
             newNodeLL->data = "-1";
             newNodeLL->left = NULL;
             newNodeLL->right = NULL;
@@ -583,11 +583,11 @@ node *findDerivative(node *Node)
             newNodeL->left = newNodeLL;
             newNodeL->right = newNodeLR;
 
-            newNodeLR->data = "sin";
+            newNodeLR->data = "sin"; // sin(f(x))
             newNodeLR->left = NULL;
             newNodeLR->right = copyNode(Node->right);
         }
-        else if (operand == "tan")
+        else if (operand == "tan") // tan(f(x)) -> (sec(f(x)) ^ 2) * f'(x)
         {
             newNode = new node();
             newNodeL = new node();
@@ -595,9 +595,9 @@ node *findDerivative(node *Node)
 
             newNode->data = "*";
             newNode->left = newNodeL;
-            newNode->right = findDerivative(Node->right);
+            newNode->right = findDerivative(Node->right); // f'(x)
 
-            newNodeL->data = "^";
+            newNodeL->data = "^"; // (sec(f(x)) ^ 2)
             newNodeLL = new node();
             newNodeLL->data = "sec";
             newNodeLL->right = copyNode(Node->right);
@@ -611,7 +611,7 @@ node *findDerivative(node *Node)
             newNodeLR->left = NULL;
             newNodeLR->right = NULL;
         }
-        else if (operand == "sec")
+        else if (operand == "sec") // sec(f(x)) -> sec(f(x)) * tan(f(x)) * f'(x)
         {
             newNode = new node();
             newNodeL = new node();
@@ -621,21 +621,21 @@ node *findDerivative(node *Node)
 
             newNode->data = "*";
             newNode->left = newNodeL;
-            newNode->right = findDerivative(Node->right);
+            newNode->right = findDerivative(Node->right); // f'(x)
 
             newNodeL->data = "*";
             newNodeL->left = newNodeLL;
             newNodeL->right = newNodeLR;
 
-            newNodeLL->data = "sec";
+            newNodeLL->data = "sec"; // sec(f(x))
             newNodeLL->left = NULL;
             newNodeLL->right = copyNode(Node->right);
 
-            newNodeLR->data = "tan";
+            newNodeLR->data = "tan"; // tan(f(x))
             newNodeLR->left = NULL;
             newNodeLR->right = copyNode(Node->right);
         }
-        else if (operand == "cosec")
+        else if (operand == "cosec") // cosec(f(x)) -> -1 * cosec(f(x)) * cot(f(x)) * f'(x)
         {
             newNode = new node();
             newNodeL = new node();
@@ -645,13 +645,13 @@ node *findDerivative(node *Node)
 
             newNode->data = "*";
             newNode->left = newNodeL;
-            newNode->right = findDerivative(Node->right);
+            newNode->right = findDerivative(Node->right); // f'(x)
 
             newNodeL->data = "*";
             newNodeL->left = newNodeLL;
             newNodeL->right = newNodeLR;
 
-            newNodeLR->data = "cot";
+            newNodeLR->data = "cot"; // cot(f(x))
             newNodeLR->left = NULL;
             newNodeLR->right = copyNode(Node->right);
 
@@ -663,15 +663,15 @@ node *findDerivative(node *Node)
             newNodeLL->left = newNodeLLL;
             newNodeLL->right = newNodeLLR;
 
-            newNodeLLL->data = "-1";
+            newNodeLLL->data = "-1"; // -1
             newNodeLLL->left = NULL;
             newNodeLLL->right = NULL;
 
-            newNodeLLR->data = "cosec";
+            newNodeLLR->data = "cosec"; // cosec(f(x))
             newNodeLLR->left = NULL;
             newNodeLLR->right = copyNode(Node->right);
         }
-        else if (operand == "cot")
+        else if (operand == "cot") // cot(f(x)) -> -1 * (cosec(f(x)) ^ 2) * f'(x)
         {
             newNode = new node();
             newNodeL = new node();
@@ -681,20 +681,20 @@ node *findDerivative(node *Node)
 
             newNode->data = "*";
             newNode->left = newNodeL;
-            newNode->right = findDerivative(Node->right);
+            newNode->right = findDerivative(Node->right); // f'(x)
 
             newNodeL->data = "*";
             newNodeL->left = newNodeLL;
             newNodeL->right = newNodeLR;
 
-            newNodeLL->data = "-1";
+            newNodeLL->data = "-1"; // -1
             newNodeLL->left = NULL;
             newNodeLL->right = NULL;
 
             node *newNodeLRL, *newNodeLRR;
             newNodeLRL = new node();
             newNodeLRR = new node();
-            newNodeLR->data = "^";
+            newNodeLR->data = "^"; // (cosec(f(x)) ^ 2)
             newNodeLR->left = newNodeLRL;
             newNodeLR->right = newNodeLRR;
 
@@ -706,7 +706,7 @@ node *findDerivative(node *Node)
             newNodeLRR->left = NULL;
             newNodeLRR->right = NULL;
         }
-        else if (operand == "log")
+        else if (operand == "log") // log(f(x)) -> (f(x) ^ -1) * f'(x)
         {
             newNode = new node();
             newNodeL = new node();
@@ -714,9 +714,9 @@ node *findDerivative(node *Node)
 
             newNode->data = "*";
             newNode->left = newNodeL;
-            newNode->right = findDerivative(Node->right);
+            newNode->right = findDerivative(Node->right); // f'(x)
 
-            newNodeL->data = "^";
+            newNodeL->data = "^"; // (f(x) ^ -1)
             newNodeL->left = copyNode(Node->right);
 
             newNodeL->right = new node();
@@ -726,8 +726,10 @@ node *findDerivative(node *Node)
         }
     }
 
-    return newNode;
+    return newNode; // newNode -> Root node of the derivative tree.
 }
+
+// Function taking infix equation and returning root node of the derivative tree.
 node *derivative(string eqn)
 {
     node *Node = constructTree(eqn);
@@ -739,6 +741,7 @@ node *derivative(string eqn)
 
 /***********************************************************************************************/
 
+// Function taking infix equation and returning infix equation of the derivative.
 string getDerivative(string in_string)
 {
     vector<string> post;
@@ -748,17 +751,16 @@ string getDerivative(string in_string)
     string derivative = traversal(deri);
 
     return derivative;
-    // cout << "\nDerivative of given equation : ";
-    // cout << derivative;
-
-    //cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]
-    //[[cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]]]
-    // [[[[[34 * sin(x)] ^ -1] * [[34 * [cos(x) * 1]] + [0 * sin(x)]]] + [[sec ^ 2] * [[cos(x) * 1] - 0]]] + 0]
-
-    // log[34 * sin[x]] + tan[sin[x] - 67] + 12
-    // sin[cos[2 * x] + 12] + 123 * x
-    // sin[x] + cos[x] + 123 * x
-    // sec[4 * x] + tan[log[x] + 12] + 12
 }
 
 /***********************************************************************************************/
+
+//cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]
+//[[cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]]]
+// [[[[[34 * sin(x)] ^ -1] * [[34 * [cos(x) * 1]] + [0 * sin(x)]]] + [[sec ^ 2] * [[cos(x) * 1] - 0]]] + 0]
+
+// log[34 * sin[x]] + tan[sin[x] - 67] + 12
+// sin[cos[2 * x] + 12] + 123 * x
+// sin[x] + cos[x] + 123 * x
+// sec[4 * x] + tan[log[x] + 12] + 12
+
