@@ -1,89 +1,82 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Structure for node of a tree.
+//struct for node of a tree
 typedef struct node
 {
-    string data; // Variable for storing operator or operand.
+    string data;
     struct node *left;
     struct node *right;
 } node;
 
-// Utility functions.
 bool isNumber(string s);
 int findType(string ch);
 bool isOperator(string str);
 int precedance(string a);
 
-// Functions for printing data in the tree.
 void inOrder(node *tree);
 void preOrder(node *node);
 string traversal(node *root);
 
-// Functions for parsing the input string and converting the infix equation into postfix equation.
 string removeSpaces(string str);
 vector<string> getOperands(string ip_string);
 vector<string> inToPost(vector<string> infix);
 vector<string> postfix(string in_string);
 
-// Functions for converting postfix equation into equation tree.
 node *operandNode(string str);
 node *constructTree(string eqn);
 
-// Functions for finding the derivative tree from given equation tree.
 node *copyNode(node *Node);
 node *exponentDerivative(node *Node);
 node *findDerivative(node *Node);
 node *derivative(string eqn);
 
-string getDerivative(string in_string);
+void getDerivative();
 
-// Driver Code
 int main()
 {
-    string in_string;
-    cout << "\nEnter the equation : "; // Taking the input.
-    fflush(stdin);
-    getline(cin, in_string);
-
-    string derivative;
-    derivative = getDerivative(in_string); // getDerivative returns the derivative string.
-    cout << "\nDerivative of given equation : ";
-    cout << derivative;
-
+    getDerivative();
     return 0;
 }
 
 /***********************************************************************************************/
 
-// Returns true if the string passed is a NUMBER.
+//returns true if the string passed is a number
 bool isNumber(string s)
 {
     auto it = s.begin();
-    while (it != s.end() && isdigit(*it)) // Iterating through the string and checking each of the character.
+    while (it != s.end() && isdigit(*it))
         ++it;
     return !s.empty() && it == s.end();
 }
 
-// Returns 1 if the given string is operand or returns -1 if string is arithmetic operator.
+//returns -1 if the given string is operator or returns 1 (operand string)
 int findType(string ch)
 {
+
     if (ch == "+" || ch == "-" || ch == "*" || ch == "/" || ch == "^")
-        return -1; //returns -1 if string is operator.
-    return 1;
+    {
+        //cout << __LINE__ << endl;
+        return -1; //returns -1 if string is operator
+    }
+    else
+    {
+        //cout << __LINE__ << endl;
+        return 1;
+    }
 }
 
-// Determines if the given string is a operator or not.
-// Returns 1 if string is operator or returns 0 if string is operand.
+//determines if the given string is a operand or not
+//returns 1 if string is operator or returns 0 if string is operand
 bool isOperator(string str)
 {
     return (str == "+" || str == "-" || str == "/" || str == "*" || str == "^");
 }
 
-// Returns the precedance of the operator.
-// 3-> ^
-// 2-> * or /
-// 1-> + or -
+//returns the precedance of the operator
+//3-> ^
+//2-> * or /
+//1-> + or -
 int precedance(string a)
 {
     if (a == "^")
@@ -98,77 +91,87 @@ int precedance(string a)
 
 /***********************************************************************************************/
 
-// Prints the inorder traversal of the tree.
-// Left-> Root-> Right.
+//prints the inorder traversal of the tree
 void inOrder(node *tree)
 {
     if (tree != NULL)
     {
+
         inOrder(tree->left);
         cout << tree->data << " ";
         inOrder(tree->right);
     }
     else
+    {
         return;
+    }
 }
 
-// Prints the preorder traversal of the tree.
-// Root-> Left-> Right.
+//prints the preorder traversal of the tree
 void preOrder(node *node)
 {
     if (node == NULL)
         return;
 
     printf("%s ", node->data);
+
     preOrder(node->left);
+
     preOrder(node->right);
 }
 
-// Function for printing the derivative equation as fully parenthesied string.
+//function for printing the derivative equation as fully parenthesied string.
 string traversal(node *root)
 {
     if (root->data == "+" || root->data == "-" || root->data == "*" || root->data == "^")
     {
-        // Binary operators.
-        // First operand - left child of node.
-        // Second operand - right child of node.
+        //binary operators 
+        //first operand - left child of node 
+        //second operand - right child of node 
         return "[" + traversal(root->left) + " " + root->data + " " + traversal(root->right) + "]";
     }
     else
     {
-        // Unary operators.
-        // Operand - right child of node.
+        //unary operators
+        //operand - right child of node
         if (root->data == "cos")
+        {
             return "cos(" + traversal(root->right) + ")";
-
+        }
         else if (root->data == "sin")
+        {
             return "sin(" + traversal(root->right) + ")";
-
+        }
         else if (root->data == "tan")
+        {
             return "tan(" + traversal(root->right) + ")";
-
+        }
         else if (root->data == "log")
+        {
             return "log(" + traversal(root->right) + ")";
-
+        }
         else if (root->data == "cosec")
+        {
             return "cosec(" + traversal(root->right) + ")";
-
+        }
         else if (root->data == "sec")
+        {
             return "sec(" + traversal(root->right) + ")";
-
+        }
         else if (root->data == "cot")
+        {
             return "cot(" + traversal(root->right) + ")";
-
+        }
         else
-            // If the node data is number or x then return it as it is.
-            // The leaf nodes of the derivative tree are always either number or x.
+        {
+            //if the node data is number or x then return it as it is
             return root->data;
+        }
     }
 }
-
 /***********************************************************************************************/
 
-// Removes all the whitespace characters(" ","\n","\t") from the string.
+//removes all the whitespace characters(" ","\n","\t") from the string
 string removeSpaces(string str)
 {
     str.erase(remove(str.begin(), str.end(), '\t'), str.end());
@@ -177,19 +180,18 @@ string removeSpaces(string str)
     return str;
 }
 
-// The function getOperands takes the input string
-// and returns a vector of strings which contains all the operands and operators in infix order.
+//the function getOperands takes the input string
+//and returns a vector of strings which contains all the operands and operators in infix order
 vector<string> getOperands(string ip_string)
 {
     vector<string> operands; //defining a vector to contain all the operand and operators
     int i = 0, start = 0, end = 0;
     string s1;
     stack<string> st;
-    for (i = 0; i < ip_string.length(); i++) // Iterating through the input string.
+    for (i = 0; i < ip_string.length(); i++)
     {
         if (ip_string[i] == '[')
         {
-            // Operands are enclosed into [] hence all the characters between [] are treated as a separate string.
             st.push("[");
             while (!st.empty())
             {
@@ -201,22 +203,26 @@ vector<string> getOperands(string ip_string)
             }
             i++;
         }
-        if (ip_string[i] == ' ') // Parsing the string whenever a space is encountered.
+        if (ip_string[i] == ' ') //parsing the string whenever a space is encountered
         {
-            end = i - start;                   // Length of the string (operator or operand).
-            s1 = ip_string.substr(start, end); // Creating a substring (operator or operand) from last encountered space+1 to this space index
+            end = i - start;                   // length of the string (operator / operand)
+            s1 = ip_string.substr(start, end); // creating a substring (operator / operand)
+            //s1 = removeSpaces(s1);
             if (s1.length() != 0)
-                operands.push_back(s1); // If the string is non-empty then append it into the vector
-
+            {
+                operands.push_back(s1); // if the string is non-empty then append it into the vector
+            }
+            //cout << "start : " << start << "str1:" << s1 << "end : " << end << endl;
             start = i + 1;
         }
     }
     s1 = ip_string.substr(start, ip_string.length() - start);
+    // s1 = removeSpaces(s1);
     operands.push_back(s1);
-    return operands; // operands -> Vector containing the operators and operands in infix order(parsed input string).
+    return operands;
 }
 
-// Converts the given infix equation into a postfix equation using stack.
+//converts the given infix string into a postfix string
 vector<string> inToPost(vector<string> infix)
 {
     int i;
@@ -225,7 +231,7 @@ vector<string> inToPost(vector<string> infix)
     vector<string> post;
     for (i = 0; i < infix.size(); i++)
     {
-        if (isOperator(infix[i])) // Operator encountered.
+        if (isOperator(infix[i])) //operator
         {
             while (!stk.empty() && precedance(infix[i]) <= precedance(stk.top()))
             {
@@ -235,11 +241,11 @@ vector<string> inToPost(vector<string> infix)
             }
             stk.push(infix[i]);
         }
-        else if (infix[i] == "(") // '(' bracket
+        else if (infix[i] == "(") // ( bracket
         {
             stk.push(infix[i]);
         }
-        else if (infix[i] == ")") // ')' bracket
+        else if (infix[i] == ")") // ) bracket
         {
             while (!stk.empty() && stk.top() != "(")
             {
@@ -255,8 +261,10 @@ vector<string> inToPost(vector<string> infix)
             else
                 stk.pop();
         }
-        else // Operand encountered.
+        else //operand
+        {
             post.push_back(infix[i]);
+        }
     }
 
     while (!stk.empty())
@@ -266,24 +274,25 @@ vector<string> inToPost(vector<string> infix)
         post.push_back(temp);
     }
 
-    return post; // post -> Vector containing the operators and operands in postfix order.
+    // for (int j = 0; j < post.size(); ++j)
+    //     cout << " " << post[j];
+    return post;
 }
 
-// Driver code which takes input as a string and returns a vector of type string of postfix expression.
+//driver code which takes input as a string and returns a vector of type string of postfix expression
 vector<string> postfix(string in_string)
 {
     vector<string> operands;
     vector<string> post;
     operands = getOperands(in_string);
     post = inToPost(operands);
-    return post; // post -> Vector containing the operators and operands in postfix order. 
+    return post;
 }
 
 /***********************************************************************************************/
 
 /***********************************************************************************************/
 
-// Function takes a unary operator and it's operands and returns root node of the expression tree.
 node *operandNode(string str)
 {
     string br1 = "[", br2 = "]";
@@ -304,19 +313,24 @@ node *operandNode(string str)
         new1->data = operator1;
 
         occ2 = str.rfind(br2);
-        string operand = str.substr(occ1 + 1, occ2 - occ1 - 1); // Getting the operand string.
-        new1->right = constructTree(operand);                   // Constructing tree for operand. (Operand are stored as right child of the unary operators)
+        // cout<<__LINE__<<str<<endl;
+        // cout<<__LINE__<<occ2<<endl;
+        string operand = str.substr(occ1 + 1, occ2 - occ1 - 1);
+        // cout<<__LINE__<<operand<<endl;
+        new1->right = constructTree(operand);
         new1->left = NULL;
     }
-
-    return new1; // new1 -> Root node containing unary operator as data.
+    return new1;
 }
 
-// Takes infix equation as input and returns root node of the expression tree.
 node *constructTree(string eqn)
 {
-    vector<string> post = postfix(eqn); // Calling postfix for conversion from infix to postfix.
-    if (post[0] == "x")                 // If data is 'x' then return a single node containing 'x' as data.
+    vector<string> post = postfix(eqn);
+    // cout<<"POSTFIX : ";
+    // for (int j = 0; j < post.size(); ++j)
+    //     cout << post[j] << " ";
+    // cout<<endl;
+    if (post[0] == "x")
     {
         node *new1;
         new1 = new node();
@@ -330,22 +344,20 @@ node *constructTree(string eqn)
     auto i = post.begin();
     string s = *i;
     int flag;
-
-    // Iterating through the postfix equation for constructing tree using stack.
     for (i++; i != post.end(); i++)
     {
+        //cout << "s-->" << s << "<--" << __LINE__ << endl;
         flag = findType(s);
         if (flag == 1)
         {
-            // If the data is opeand then construct a node of tree and push the node on the stack.
+            //cout << __LINE__ << endl;
             new1 = new node();
             new1 = operandNode(s);
             stk.push(new1);
         }
         else
         {
-            // If the data is operator then pop the stack two times and link the operator with operands
-            // and again push the node on the stack.
+            //cout << __LINE__ << endl;
             p1 = stk.top();
             stk.pop();
             p2 = stk.top();
@@ -354,11 +366,18 @@ node *constructTree(string eqn)
             new1->data = s;
             new1->left = p2;
             new1->right = p1;
+            // cout<<"right"<<p1->data<<endl;
+            // cout<<"left"<<p2->data<<endl;
+            // cout<<"s"<<s<<endl;
             stk.push(new1);
         }
         s = *i;
+        // cout << "top stack : " << ((stk.top()->data)) << endl;
+        // cout << "stack size : " << stk.size() << endl
+        //      << endl;
     }
-
+    // cout << "End of loop " << endl;
+    // cout << __LINE__ << endl;
     p1 = stk.top();
     stk.pop();
     p2 = stk.top();
@@ -368,15 +387,22 @@ node *constructTree(string eqn)
     new1->left = p2;
     new1->right = p1;
     stk.push(new1);
+    // cout<<"right"<<p1->data<<endl;
+    // cout<<"left"<<p2->data<<endl;
+    // cout<<"s"<<s<<endl;
 
-    return stk.top(); // stk.top() -> Root node of the expression tree.
+    // cout << "top stack" << (stk.top()->data) << endl;
+    // cout << "stack size : " << stk.size() << endl
+    //      << endl;
+
+    return stk.top();
 }
 
 /***********************************************************************************************/
 
 /***********************************************************************************************/
 
-// Function to copy the tree.
+//function to copy the tree as it is
 node *copyNode(node *Node)
 {
     if (Node == NULL)
@@ -387,28 +413,28 @@ node *copyNode(node *Node)
         temp->data = Node->data;
         temp->left = copyNode(Node->left);
         temp->right = copyNode(Node->right);
-        return temp; // temp -> Root node of the copied tree. 
+        return temp;
     }
 }
 
-// Function for calculating the derivatives of exponential functions.
-// Case 1 : e ^ (f(x))
-// Case 2 : a ^ (f(x))
-// Case 3 : (f(x)) ^ a
+//function defined for calculating the derivatives of functions which includes exponential function
+//case 1 : e ^ x
+//case 2 : a ^ x
+//case 3 : f(x) ^ x
 node *exponentDerivative(node *Node)
 {
     node *newNode, *newNodeL, *newNodeR;
     string opr1 = Node->left->data, opr2 = Node->right->data;
-    if (opr1 == "e") // e ^ (f(x)) -> (e ^ f(x)) * f'(x)
+    if (opr1 == "e") // e ^ x
     {
         newNode = new node();
         newNodeL = new node();
 
         newNode->data = "*";
         newNode->left = newNodeL;
-        newNode->right = findDerivative(Node->right);  // f'(x)
+        newNode->right = findDerivative(Node->right);
 
-        newNodeL->data = "^"; //  (e ^ f(x))
+        newNodeL->data = "^";
 
         newNodeL->left = new node();
         newNodeL->left->data = "e";
@@ -417,7 +443,7 @@ node *exponentDerivative(node *Node)
 
         newNodeL->right = copyNode(Node->right);
     }
-    else if (isNumber(opr1)) // a ^ (f(x)) -> (a ^ (f(x))) * log(a) * f'(x)
+    else if (isNumber(opr1)) // a ^ x
     {
         node *newNodeLL, *newNodeLR;
         newNode = new node();
@@ -427,13 +453,13 @@ node *exponentDerivative(node *Node)
 
         newNode->data = "*";
         newNode->left = newNodeL;
-        newNode->right = findDerivative(Node->right);  // f'(x)
+        newNode->right = findDerivative(Node->right);
 
         newNodeL->data = "*";
         newNodeL->left = newNodeLL;
         newNodeL->right = newNodeLR;
 
-        newNodeLL->data = "^";   //  (a ^ (f(x)))
+        newNodeLL->data = "^";
         newNodeLL->left = new node();
         newNodeLL->left->data = opr1;
         newNodeLL->left->left = NULL;
@@ -442,14 +468,14 @@ node *exponentDerivative(node *Node)
         newNodeLL->right = new node();
         newNodeLL->right = copyNode(Node->right);
 
-        newNodeLR->data = "log";  //  log(a)
+        newNodeLR->data = "log";
         newNodeLR->left = NULL;
         newNodeLR->right = new node();
         newNodeLR->right->data = opr1;
         newNodeLR->right->left = NULL;
         newNodeLR->right->right = NULL;
     }
-    else // (f(x)) ^ a -> a * (f(x) ^ (a-1)) * f'(x)
+    else // f(x) ^ x
     {
         node *newNodeLL, *newNodeLR;
         stringstream ss;
@@ -461,7 +487,7 @@ node *exponentDerivative(node *Node)
 
         newNode->data = "*";
         newNode->left = newNodeL;
-        newNode->right = findDerivative(Node->left);  // f'(x)
+        newNode->right = findDerivative(Node->left);
 
         newNodeL->data = "*";
         newNodeL->left = newNodeLL;
@@ -471,7 +497,7 @@ node *exponentDerivative(node *Node)
         newNodeLL->left = NULL;
         newNodeLL->right = NULL;
 
-        newNodeLR->data = "^";  // (f(x) ^ (a-1))
+        newNodeLR->data = "^";
         newNodeLR->left = copyNode(Node->left);
         newNodeLR->right = new node();
         num1 = stoi(Node->right->data);
@@ -479,7 +505,7 @@ node *exponentDerivative(node *Node)
         ss << num1;
         string str = ss.str();
 
-        newNodeLR->right->data = str;  // a 
+        newNodeLR->right->data = str;
         newNodeLR->right->left = NULL;
         newNodeLR->right->right = NULL;
     }
@@ -739,17 +765,32 @@ node *derivative(string eqn)
 
 /***********************************************************************************************/
 
-string getDerivative(string in_string)
+void getDerivative()
 {
+    string in_string;
     vector<string> post;
+    cout << "\nEnter the equation : ";
+    fflush(stdin);
+    getline(cin, in_string);
+
+    // post = postfix(in_string);
+    // cout << "\nPostfix equation : ";
+    // for (int j = 0; j < post.size(); ++j)
+    //     cout << post[j] << " ";
+    // cout << "\n";
+
+    // node *tree;
+    // tree = constructTree(in_string);
+    // cout << "\nInorder traversal : ";
+    // inOrder(tree);
+    // cout << "\n";
 
     node *deri = new node();
     deri = derivative(in_string);
+    cout << "\nInorder traversal of the derivative : ";
+    // inOrder(deri);
     string derivative = traversal(deri);
-
-    return derivative;
-    // cout << "\nDerivative of given equation : ";
-    // cout << derivative;
+    cout << derivative; //substr(2,derivative.length()-4);
 
     //cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]
     //[[cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]]]
