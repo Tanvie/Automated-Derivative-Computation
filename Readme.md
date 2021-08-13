@@ -28,15 +28,15 @@ Input -
 ![Input](img/input.png)
 
 
-**1. Input String Parsing**-
+#### **1. Input String Parsing**-
    1. The input string is parsed based on "[]"(for Unary Functions) and " "(for Binary Operations) into a vector containg all the opeartors and operands in infix order.
    2. The operands for composite functions are still associated with the parent functions.
    
    **Functions used** - 
-   `string removeSpaces(string str);`
-   `vector<string> getOperands(string ip_string);` 
+   1. [string removeSpaces(string str);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L172)
+   2. [vector<string> getOperands(string ip_string);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L182)
 
-**2. Constructing The Expression Tree**-
+#### **2. Constructing The Expression Tree**-
         The input infix equation is converted into postfix form considering the precedence of operators by making use of the stack. An expression tree is constructed which can have two types of nodes- 
         -	*Operand Node* - If the operand is operand like numbers or ‘x’ then the node will have both of its child pointing to null values indicating there are no further children to this node.
         -	*Operator Node* - It the operator is binary like addition or subtraction then it’s right and left children will point towards the operands of the operator and if the operator is unary then its right child will point toward the operand node of the given operator.
@@ -46,30 +46,30 @@ Input -
    **Steps**-
    1. The parsed infix eqution is converted into postfix equation according to the operator precedance.
    **Functions used** - 
-    `vector<string> infixToPost(vector<string> infix);`
-    `vector<string> postfix(string in_string);`
+       1. [vector<string> infixToPost(vector<string> infix);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L220)
+       2. [vector<string> postfix(string in_string);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L273)
    
-   1. The postfix equation is converted into an expression tree by using stack.
+   2. The postfix equation is converted into an expression tree by using stack.
    **Functions used** - 
-   `node *operandNode(string str);`
-   `node *constructTree(string eqn);`
+      1. [node *operandNode(string str);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L287)
+      2. [node *constructTree(string eqn);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L316)
    (the operandNode function is used to construct the tree for function's operand-composite functions-the operand also can be a function)
 
 
-**3. Constructing The Derivative Tree**- 
+#### **3. Constructing The Derivative Tree**- 
 The function used for constructing the derivative tree takes the root node of the expression tree and recursively finds the derivative of the left and right child. If the node is mathematical operator node then the program finds the derivative of left and right child recursively else if the node is operand then it maps the corresponding derivative of the function.
 Traverse the expression tree starting from the root -> left node -> right node.
-    **Functions used** - 
-    `node *copyNode(node *Node);`
-    `node *exponentDerivative(node *Node);`
-    `node *findDerivative(node *Node);`
+    **Functions used**- 
+          1. [node *copyNode(node *Node);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L380)
+          2. [node *exponentDerivative(node *Node);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L398)
+          3. [node *findDerivative(node *Node);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L491)
 
 The procedure from string parsing is again repeated for the opearands of the composite functions. 
 
-**4. Printing The Derivative Equation**-
+#### **4. Printing The Derivative Equation**-
 The derivative tree is traversed starting from the root node and the functions are printed with valid parenthesis.
      **Functions used** - 
-     `string traversal(node *root);`
+     1. [string traversal(node *root);](https://github.com/Tanvie/Automated-Derivative-Computation/blob/master/main.cpp#L128)
 
 ![DerivativeTree](img/derivative-1.jpg)
 
