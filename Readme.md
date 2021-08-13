@@ -26,6 +26,8 @@ The input equations can have following standard mathematical functions:
 
 Input - 
 ![Input](img/input.png)
+
+
 **1. Input String Parsing**-
    1. The input string is parsed based on "[]"(for Unary Functions) and " "(for Binary Operations) into a vector containg all the opeartors and operands in infix order.
    2. The operands for composite functions are still associated with the parent functions.
