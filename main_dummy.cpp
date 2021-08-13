@@ -20,7 +20,7 @@ string traversal(node *root);
 
 string removeSpaces(string str);
 vector<string> getOperands(string ip_string);
-vector<string> inToPost(vector<string> infix);
+vector<string> infixToPost(vector<string> infix);
 vector<string> postfix(string in_string);
 
 node *operandNode(string str);
@@ -223,7 +223,7 @@ vector<string> getOperands(string ip_string)
 }
 
 //converts the given infix string into a postfix string
-vector<string> inToPost(vector<string> infix)
+vector<string> infixToPost(vector<string> infix)
 {
     int i;
     string temp;
@@ -285,7 +285,7 @@ vector<string> postfix(string in_string)
     vector<string> operands;
     vector<string> post;
     operands = getOperands(in_string);
-    post = inToPost(operands);
+    post = infixToPost(operands);
     return post;
 }
 

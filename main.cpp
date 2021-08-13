@@ -23,7 +23,7 @@ string traversal(node *root);
 // Functions for parsing the input string and converting the infix equation into postfix equation.
 string removeSpaces(string str);
 vector<string> getOperands(string ip_string);
-vector<string> inToPost(vector<string> infix);
+vector<string> infixToPost(vector<string> infix);
 vector<string> postfix(string in_string);
 
 // Functions for converting postfix equation into equation tree.
@@ -217,7 +217,7 @@ vector<string> getOperands(string ip_string)
 }
 
 // Converts the given infix equation into a postfix equation using stack.
-vector<string> inToPost(vector<string> infix)
+vector<string> infixToPost(vector<string> infix)
 {
     int i;
     string temp;
@@ -275,7 +275,7 @@ vector<string> postfix(string in_string)
     vector<string> operands;
     vector<string> post;
     operands = getOperands(in_string);
-    post = inToPost(operands);
+    post = infixToPost(operands);
     return post; // post -> Vector containing the operators and operands in postfix order.
 }
 
@@ -755,10 +755,8 @@ string getDerivative(string in_string)
 
 /***********************************************************************************************/
 
-//cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]
-//[[cos([cos([2 * x]) + 12]) * [[[-1 * sin([2 * x])] * [[2 * 1] + [0 * x]]] + 0]] + [[123 * 1] + [0 * x]]]
-// [[[[[34 * sin(x)] ^ -1] * [[34 * [cos(x) * 1]] + [0 * sin(x)]]] + [[sec ^ 2] * [[cos(x) * 1] - 0]]] + 0]
 
+// Example Inputs:
 // log[34 * sin[x]] + tan[sin[x] - 67] + 12
 // sin[cos[2 * x] + 12] + 123 * x
 // sin[x] + cos[x] + 123 * x
